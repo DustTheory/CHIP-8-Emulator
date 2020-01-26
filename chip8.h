@@ -3,9 +3,11 @@
 #define CHIP8_H
 
 #include <stdint.h>
+#include <random>
 
 #define CHIP8_MAX_FAJL_VELICINA 3584
 #define CHIP8_VELICINA_GRAFICKE_MEMORIJE 2048
+#define CHIP8_VELICINA_MEMORIJE 4096
 
 enum {
     OP_00E_ = 0x0000,
@@ -21,13 +23,13 @@ enum {
     OP_ANNN = 0xA000,
     OP_BNNN = 0xB000,
     OP_CXNN = 0xC000,
-    OP_DXNN = 0xD000,
+    OP_DXYN = 0xD000,
     OP_EX__ = 0xE000,
     OP_FX__ = 0xF000
 };
 
 enum {
-    SOPMASK_00E_ = 0xF000,
+    SOPMASK_00E_ = 0x000F,
     SOP_00E0 = 0x0000,
     SOP_00EE = 0x000E,
 
@@ -44,9 +46,9 @@ enum {
 
     SOPMASK_EX__ = 0x00FF,
     SOP_EX9E = 0x009E,
-    SOP_EX1A = 0x001A,
+    SOP_EXA1 = 0x00A1,
 
-    SOPMASK_EX__ = 0x00FF,
+    SOPMASK_FX__ = 0x00FF,
     SOP_FX07 = 0x0007,
     SOP_FX0A = 0x000A,
     SOP_FX15 = 0x0015,
@@ -61,25 +63,21 @@ enum {
 class Chip8 {
 private: 
     uint8_t V[16]; // Registri V1 – VF
-    uint8_t DT; // Delay Timer zvučni registar
-    uint8_t ST; // Sound Timer zvučni registar
-   
     uint16_t stek[16]; // 16 bajti stack memorije = 64 bita
     uint16_t SP; // 16-bitni Stack Pointer registar
     uint16_t PC; // 16-bitni Program Counter registar
     uint16_t I; // 16-bitni Index registar
     uint16_t instrukcija; // Trenutna instrukcija
    
-    uint8_t memorija[4096]; // Radna memorija ~4kb
-
-    std::random_device rd;
-    std::mt19937 *gen;
-    std::uniform_int_distribution<> *dis;
-
+    uint8_t memorija[CHIP8_VELICINA_MEMORIJE]; // Radna memorija ~4kb
     
 public:
-    uint8_t graf[CHIP8_VELICINA_GRAFICKE_MEMORIJE]; // Graficka memorija 64*32 bytes
+    uint8_t DT; // Delay Timer zvučni registar
+    uint8_t ST; // Sound Timer zvučni registar
+
+    uint8_t graf[CHIP8_VELICINA_GRAFICKE_MEMORIJE*4]; // Graficka memorija 64*32 bytes
     uint8_t tast[16]; // Tastatura
+    sf::Keyboard::Key tastmap[16];
     bool crtaj;   
     Chip8();
     ~Chip8();
