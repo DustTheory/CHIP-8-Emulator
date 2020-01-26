@@ -1,2 +1,7 @@
 # CHIP-8-Emulator
-A CHIP-8 emulator with a few special features.
+## An emulator of the original spec CHIP-8 system.
+### What works:
+* Graphics
+* Input
+* CPU
+* Audio
